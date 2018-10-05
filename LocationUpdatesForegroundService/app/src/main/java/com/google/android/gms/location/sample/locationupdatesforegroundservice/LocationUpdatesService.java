@@ -286,10 +286,10 @@ public class LocationUpdatesService extends Service {
                 new Intent(this, MainActivity.class), 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .addAction(R.drawable.ic_launch, getString(R.string.launch_activity),
-                        activityPendingIntent)
-                .addAction(R.drawable.ic_cancel, getString(R.string.remove_location_updates),
-                        servicePendingIntent)
+                //.addAction(R.drawable.ic_launch, getString(R.string.launch_activity),
+                //        activityPendingIntent)
+                //.addAction(R.drawable.ic_cancel, getString(R.string.remove_location_updates),
+                //        servicePendingIntent)
                 .setContentText(text)
                 .setContentTitle(Utils.getLocationTitle(this))
                 .setOngoing(true)
@@ -325,7 +325,7 @@ public class LocationUpdatesService extends Service {
     }
 
     private void onNewLocation(Location location) {
-        Log.i(TAG, "New location: " + location);
+        Log.i(TAG, "New location: " );
 
         mLocation = location;
 
@@ -333,11 +333,12 @@ public class LocationUpdatesService extends Service {
         Intent intent = new Intent(ACTION_BROADCAST);
         intent.putExtra(EXTRA_LOCATION, location);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-
+        Log.i(TAG, "sendBroadCast location " +Utils.getLocationText(location));
         // Update notification content if running as a foreground service.
-        if (serviceIsRunningInForeground(this)) {
-            mNotificationManager.notify(NOTIFICATION_ID, getNotification());
-        }
+        //if (serviceIsRunningInForeground(this)) {
+        //    mNotificationManager.notify(NOTIFICATION_ID, getNotification());
+        //    Log.i(TAG, "notify location" );
+        //}
     }
 
     /**

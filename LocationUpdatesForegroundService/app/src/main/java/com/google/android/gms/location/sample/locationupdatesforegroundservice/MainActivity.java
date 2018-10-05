@@ -43,8 +43,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 /**
  * The only activity in this sample.
@@ -67,6 +71,10 @@ import android.widget.Toast;
  */
 public class MainActivity extends AppCompatActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener {
+
+    private ArrayList<String> locations=new ArrayList<String>();
+    private ListView listView;
+    private ArrayAdapter<String> adapter;
     private static final String TAG = MainActivity.class.getSimpleName();
 
     // Used in checking for runtime permissions.
@@ -107,6 +115,11 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         myReceiver = new MyReceiver();
         setContentView(R.layout.activity_main);
+
+        listView=(ListView)findViewById(R.id.listView);
+        adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, android.R.id.text1, locations);
+        listView.setAdapter(adapter);
 
         // Check that the user hasn't revoked permissions by going to Settings.
         if (Utils.requestingLocationUpdates(this)) {
@@ -270,8 +283,11 @@ public class MainActivity extends AppCompatActivity implements
         public void onReceive(Context context, Intent intent) {
             Location location = intent.getParcelableExtra(LocationUpdatesService.EXTRA_LOCATION);
             if (location != null) {
+                locations.add(Utils.getLocationText(location));
+                Log.i("Location Message:",""+locations.size());
+                //adapter.add(Utils.getLocationText(location));
                 Toast.makeText(MainActivity.this, Utils.getLocationText(location),
-                        Toast.LENGTH_SHORT).show();
+                       Toast.LENGTH_SHORT).show();
             }
         }
     }

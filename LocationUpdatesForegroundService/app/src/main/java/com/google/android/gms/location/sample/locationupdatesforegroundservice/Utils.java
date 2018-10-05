@@ -55,7 +55,7 @@ class Utils {
      */
     static String getLocationText(Location location) {
         return location == null ? "Unknown location" :
-                "(" + location.getLatitude() + ", " + location.getLongitude() + ")";
+                "(" + location.getLatitude() + ", " + location.getLongitude() + ")"+new Date(location.getTime());
     }
 
     static String getLocationTitle(Context context) {
