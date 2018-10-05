@@ -32,6 +32,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -335,10 +336,14 @@ public class LocationUpdatesService extends Service {
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
         Log.i(TAG, "sendBroadCast location " +Utils.getLocationText(location));
         // Update notification content if running as a foreground service.
-        //if (serviceIsRunningInForeground(this)) {
+        if (serviceIsRunningInForeground(this)) {
         //    mNotificationManager.notify(NOTIFICATION_ID, getNotification());
         //    Log.i(TAG, "notify location" );
-        //}
+            String str=PreferenceManager.getDefaultSharedPreferences(this).getString(
+                    "hjy", "")+Utils.getLocationText(location)+"\n";
+            PreferenceManager.getDefaultSharedPreferences(this).edit()
+                    .putString("hjy",str).apply();
+        }
     }
 
     /**

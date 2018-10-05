@@ -168,6 +168,13 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        String str=PreferenceManager.getDefaultSharedPreferences(this).getString(
+                "hjy", "");
+        if (str!="") {
+            adapter.add(str);
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putString("hjy","").apply();
+        }
+
         LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver,
                 new IntentFilter(LocationUpdatesService.ACTION_BROADCAST));
     }
@@ -283,9 +290,9 @@ public class MainActivity extends AppCompatActivity implements
         public void onReceive(Context context, Intent intent) {
             Location location = intent.getParcelableExtra(LocationUpdatesService.EXTRA_LOCATION);
             if (location != null) {
-                locations.add(Utils.getLocationText(location));
+                //locations.add(Utils.getLocationText(location));
                 Log.i("Location Message:",""+locations.size());
-                //adapter.add(Utils.getLocationText(location));
+                adapter.add(Utils.getLocationText(location));
                 Toast.makeText(MainActivity.this, Utils.getLocationText(location),
                        Toast.LENGTH_SHORT).show();
             }
