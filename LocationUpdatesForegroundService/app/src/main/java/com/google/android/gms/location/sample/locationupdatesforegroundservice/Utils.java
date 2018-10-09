@@ -22,11 +22,19 @@ import android.location.Location;
 import android.preference.PreferenceManager;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 class Utils {
 
     static final String KEY_REQUESTING_LOCATION_UPDATES = "requesting_locaction_updates";
+    static TimeZone utc = TimeZone.getTimeZone("GMT");
+    static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    static{
+        dateFormatter.setTimeZone(utc);
+    }
+
 
     /**
      * Returns true if requesting location updates, otherwise returns false.
@@ -55,7 +63,7 @@ class Utils {
      */
     static String getLocationText(Location location) {
         return location == null ? "Unknown location" :
-                "(" + location.getLatitude() + ", " + location.getLongitude() + ")"+new Date(location.getTime());
+                "" + location.getLatitude() + ", " + location.getLongitude() + ","+location.getAltitude()+","+dateFormatter.format(new Date(location.getTime()));
     }
 
     static String getLocationTitle(Context context) {

@@ -4,6 +4,7 @@
 1. ForegroundService
 1. BroadCast and BroadCastReceiver
 1. Message with StartActivity and RemoveService features
+1. SharedPreference
 
 ## Concept
 1. Notification object is the second argument of startForegroundService()
