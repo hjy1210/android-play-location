@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,13 +24,14 @@ import android.preference.PreferenceManager;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 class Utils {
 
-    static final String KEY_REQUESTING_LOCATION_UPDATES = "requesting_locaction_updates";
-    static TimeZone utc = TimeZone.getTimeZone("GMT");
-    static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    static final String KEY_REQUESTING_LOCATION_UPDATES = "requesting_location_updates";
+    private static TimeZone utc = TimeZone.getTimeZone("GMT");
+    private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'",Locale.CHINESE);
     static{
         dateFormatter.setTimeZone(utc);
     }

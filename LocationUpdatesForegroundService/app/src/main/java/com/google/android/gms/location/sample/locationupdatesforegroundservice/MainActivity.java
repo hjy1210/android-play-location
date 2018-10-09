@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -72,8 +72,8 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private ArrayList<String> locations=new ArrayList<String>();
-    private ListView listView;
+    private ArrayList<String> locations=new ArrayList<>();
+    //private ListView listView;
     private ArrayAdapter<String> adapter;
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -116,8 +116,8 @@ public class MainActivity extends AppCompatActivity implements
         myReceiver = new MyReceiver();
         setContentView(R.layout.activity_main);
 
-        listView=(ListView)findViewById(R.id.listView);
-        adapter = new ArrayAdapter<String>(this,
+        ListView listView=findViewById(R.id.listView);
+        adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, locations);
         listView.setAdapter(adapter);
 
@@ -135,16 +135,16 @@ public class MainActivity extends AppCompatActivity implements
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
 
-        mRequestLocationUpdatesButton = (Button) findViewById(R.id.request_location_updates_button);
-        mRemoveLocationUpdatesButton = (Button) findViewById(R.id.remove_location_updates_button);
+        mRequestLocationUpdatesButton = findViewById(R.id.request_location_updates_button);
+        mRemoveLocationUpdatesButton = findViewById(R.id.remove_location_updates_button);
 
         mRequestLocationUpdatesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!checkPermissions()) {
-                    requestPermissions();
-                } else {
+                if (checkPermissions()) {
                     mService.requestLocationUpdates();
+                } else {
+                    requestPermissions();
                 }
             }
         });
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements
         super.onResume();
         String str=PreferenceManager.getDefaultSharedPreferences(this).getString(
                 "hjy", "");
-        if (str!="") {
+        if (!str.equals("")) {
             adapter.add(str);
             PreferenceManager.getDefaultSharedPreferences(this).edit().putString("hjy","").apply();
         }
