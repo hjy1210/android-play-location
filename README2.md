@@ -13,6 +13,20 @@
 1. Message without StartActivity and RemoveService features
 1. In ForegroundService, use less notify
 
+## Note
+```
+    compileSdkVersion 28
+    buildToolsVersion "28.0.2"
+       targetSdkVersion 26
+```
+Above configuration work on Android 8 and 9.
+```
+    compileSdkVersion 28
+    buildToolsVersion "28.0.2"
+       targetSdkVersion 28
+```
+Above configuration work on Android 8 but not Android 9.
+
 ## TODO
 1. In ForegroundService, change sendBroadcast to save location data in SharedPreference,
 1. In Activity.onResume, retrieve above data and clear from SharedPreference.

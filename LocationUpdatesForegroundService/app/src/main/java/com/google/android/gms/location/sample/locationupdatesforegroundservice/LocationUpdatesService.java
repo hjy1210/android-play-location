@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,13 +16,13 @@
 
 package com.google.android.gms.location.sample.locationupdatesforegroundservice;
 
-import android.app.ActivityManager;
+//import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
+//import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
+//import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.Location;
@@ -104,10 +104,10 @@ public class LocationUpdatesService extends Service {
      */
     private boolean mChangingConfiguration = false;
 
-    private NotificationManager mNotificationManager;
+    //private NotificationManager mNotificationManager;
 
     /**
-     * Contains parameters used by {@link com.google.android.gms.location.FusedLocationProviderApi}.
+     * Contains parameters used by {@link com.google.android.gms.location.FusedLocationProviderClient}.
      */
     private LocationRequest mLocationRequest;
 
@@ -127,6 +127,8 @@ public class LocationUpdatesService extends Service {
      * The current location.
      */
     private Location mLocation;
+
+    private boolean isForeground = false;
 
     public LocationUpdatesService() {
     }
@@ -149,7 +151,7 @@ public class LocationUpdatesService extends Service {
         HandlerThread handlerThread = new HandlerThread(TAG);
         handlerThread.start();
         mServiceHandler = new Handler(handlerThread.getLooper());
-        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         // Android O requires a Notification Channel.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -159,7 +161,10 @@ public class LocationUpdatesService extends Service {
                     new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
 
             // Set the Notification Channel for the Notification Manager.
-            mNotificationManager.createNotificationChannel(mChannel);
+            if (mNotificationManager!=null){
+                mNotificationManager.createNotificationChannel(mChannel);
+            }
+
         }
     }
 
@@ -191,6 +196,7 @@ public class LocationUpdatesService extends Service {
         // when that happens.
         Log.i(TAG, "in onBind()");
         stopForeground(true);
+        isForeground = false;
         mChangingConfiguration = false;
         return mBinder;
     }
@@ -202,6 +208,7 @@ public class LocationUpdatesService extends Service {
         // service when that happens.
         Log.i(TAG, "in onRebind()");
         stopForeground(true);
+        isForeground = false;
         mChangingConfiguration = false;
         super.onRebind(intent);
     }
@@ -225,6 +232,7 @@ public class LocationUpdatesService extends Service {
             }
              */
             startForeground(NOTIFICATION_ID, getNotification());
+            isForeground = true;
         }
         return true; // Ensures onRebind() is called when a client re-binds.
     }
@@ -279,14 +287,14 @@ public class LocationUpdatesService extends Service {
         intent.putExtra(EXTRA_STARTED_FROM_NOTIFICATION, true);
 
         // The PendingIntent that leads to a call to onStartCommand() in this service.
-        PendingIntent servicePendingIntent = PendingIntent.getService(this, 0, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
+        //PendingIntent servicePendingIntent = PendingIntent.getService(this, 0, intent,
+        //        PendingIntent.FLAG_UPDATE_CURRENT);
 
         // The PendingIntent to launch activity.
-        PendingIntent activityPendingIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MainActivity.class), 0);
+        //PendingIntent activityPendingIntent = PendingIntent.getActivity(this, 0,
+        //        new Intent(this, MainActivity.class), 0);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,CHANNEL_ID)
                 //.addAction(R.drawable.ic_launch, getString(R.string.launch_activity),
                 //        activityPendingIntent)
                 //.addAction(R.drawable.ic_cancel, getString(R.string.remove_location_updates),
@@ -336,7 +344,8 @@ public class LocationUpdatesService extends Service {
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
         Log.i(TAG, "sendBroadCast location " +Utils.getLocationText(location));
         // Update notification content if running as a foreground service.
-        if (serviceIsRunningInForeground(this)) {
+        //if (serviceIsRunningInForeground(this)) {
+        if (isForeground){
         //    mNotificationManager.notify(NOTIFICATION_ID, getNotification());
         //    Log.i(TAG, "notify location" );
             String str=PreferenceManager.getDefaultSharedPreferences(this).getString(
@@ -360,18 +369,18 @@ public class LocationUpdatesService extends Service {
      * Class used for the client Binder.  Since this service runs in the same process as its
      * clients, we don't need to deal with IPC.
      */
-    public class LocalBinder extends Binder {
+    class LocalBinder extends Binder {
         LocationUpdatesService getService() {
             return LocationUpdatesService.this;
         }
     }
 
-    /**
+    /*
      * Returns true if this is a foreground service.
      *
      * @param context The {@link Context}.
      */
-    public boolean serviceIsRunningInForeground(Context context) {
+    /*public boolean serviceIsRunningInForeground(Context context) {
         ActivityManager manager = (ActivityManager) context.getSystemService(
                 Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(
@@ -383,5 +392,5 @@ public class LocationUpdatesService extends Service {
             }
         }
         return false;
-    }
+    }*/
 }
